@@ -25,20 +25,16 @@ from a2a.types import (
 from a2a.server.agent_execution.agent_executor import AgentExecutor
 from a2a.server.agent_execution.context import RequestContext
 from a2a.server.events.event_queue import EventQueue
-from x402.types import (
+from x402.schemas import (
+    PaymentRequired,
     PaymentRequirements,
-    x402PaymentRequiredResponse,
     PaymentPayload,
     VerifyResponse,
     SettleResponse,
-    ExactPaymentPayload,
-    EIP3009Authorization,
-    TokenAmount,
-    TokenAsset,
-    EIP712Domain,
-    SupportedNetworks,
+    AssetAmount
 )
-from x402.facilitator import FacilitatorConfig, FacilitatorClient
+from x402.http import FacilitatorConfig, HTTPFacilitatorClient
+from x402.mechanisms.evm import ExactEIP3009Authorization
 
 from .state import PaymentStatus, x402Metadata
 
@@ -68,22 +64,17 @@ __all__ = [
     "AgentSkill",
     "TaskState",
     "TaskStatus",
+    "AssetAmount",
     "AgentExecutor",
     "RequestContext",
     "EventQueue",
+    "PaymentRequired",
     "PaymentRequirements",
-    "x402PaymentRequiredResponse",
     "PaymentPayload",
     "VerifyResponse",
     "SettleResponse",
-    "ExactPaymentPayload",
-    "EIP3009Authorization",
-    "TokenAmount",
-    "TokenAsset",
-    "EIP712Domain",
-    "SupportedNetworks",
     "FacilitatorConfig",
-    "FacilitatorClient",
+    "HTTPFacilitatorClient",
     "PaymentStatus",
     "x402Metadata",
     "x402Error",
@@ -97,6 +88,7 @@ __all__ = [
     "X402_EXTENSION_URI",
     "x402ExtensionConfig",
     "x402ServerConfig",
+    "ExactEIP3009Authorization",
     "get_extension_declaration",
     "check_extension_activation",
     "add_extension_activation_header",

@@ -17,7 +17,7 @@ from typing import Optional, Union
 from pydantic import BaseModel
 
 
-from x402.types import TokenAmount
+from x402 import AssetAmount
 
 
 X402_EXTENSION_URI = "https://github.com/google-a2a/a2a-x402/v0.1"
@@ -35,7 +35,7 @@ class x402ExtensionConfig(BaseModel):
 class x402ServerConfig(BaseModel):
     """Configuration for how a server expects to be paid"""
 
-    price: Union[str, int, TokenAmount]
+    price: Union[str, int, AssetAmount]
     pay_to_address: str
     network: str = "base"
     description: str = "Payment required..."

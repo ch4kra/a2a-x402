@@ -22,16 +22,15 @@ from eth_account import Account
 from eth_account.signers.local import LocalAccount
 from eth_account.messages import encode_typed_data
 from web3 import Web3
-from x402.clients.base import x402Client
-from x402.common import x402_VERSION
+from x402 import x402Client
+from x402.schemas import X402_VERSION
 
 
 from ..types import (
     PaymentRequirements,
-    x402PaymentRequiredResponse,
+    x402PaymentRequiredException,
     PaymentPayload,
-    ExactPaymentPayload,
-    EIP3009Authorization,
+    ExactEIP3009Authorization,
 )
 
 ASSET_ABI = json.loads(
@@ -84,7 +83,7 @@ ASSET_ABI = json.loads(
 
 
 def process_payment_required(
-    payment_required: x402PaymentRequiredResponse,
+    payment_required: x402PaymentRequiredException,
     account: LocalAccount,
     max_value: Optional[int] = None,
     valid_after: Optional[int] = None,
@@ -229,18 +228,18 @@ def process_payment(
         "valid_before": str(auth_data["valid_before"]),
         "nonce": f"0x{auth_data['nonce'].hex()}",
     }
-    authorization = EIP3009Authorization(**authorization_payload)
+    authorization = ExactEIP3009Authorization(**authorization_payload)
 
     # The signature is a single bytes object, but some systems expect it as a hex string
     # with r, s, and v components concatenated.
     signature_hex = f"0x{signed_message.r.to_bytes(32, 'big').hex()}{signed_message.s.to_bytes(32, 'big').hex()}{signed_message.v:02x}"
 
-    exact_payload = ExactPaymentPayload(
+    exact_payload = PaymentPayload(
         signature=signature_hex, authorization=authorization
     )
 
     return PaymentPayload(
-        x402_version=x402_VERSION,
+        x402_version=X402_VERSION,
         scheme=requirements.scheme,
         network=requirements.network,
         payload=exact_payload,

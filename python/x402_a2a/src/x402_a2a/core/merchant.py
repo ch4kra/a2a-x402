@@ -13,10 +13,9 @@
 # limitations under the License.
 """Payment requirements creation functions."""
 
-from typing import Optional, Any, cast
-from x402.common import process_price_to_atomic_amount
-from x402.types import Price
-from ..types import PaymentRequirements, SupportedNetworks
+from typing import Optional, Any
+from x402 import Price
+from x402.schemas import PaymentRequired, ResourceInfo, PaymentRequirements
 
 
 def create_payment_requirements(
@@ -51,21 +50,42 @@ def create_payment_requirements(
         PaymentRequirements object ready for x402PaymentRequiredResponse
     """
 
-    max_amount_required, asset_address, eip712_domain = process_price_to_atomic_amount(
-        price, network
-    )
+    # max_amount_required, asset_address, eip712_domain = process_price_to_atomic_amount(
+    #     price, network
+    # )
 
-    return PaymentRequirements(
-        scheme=scheme,
-        network=cast(SupportedNetworks, network),
-        asset=asset_address,
-        pay_to=pay_to_address,
-        max_amount_required=max_amount_required,
-        resource=resource,
-        description=description,
-        mime_type=mime_type,
-        max_timeout_seconds=max_timeout_seconds,
-        output_schema=output_schema,
-        extra=eip712_domain,
-        **kwargs,
+    # return PaymentRequirements(
+    #     scheme=scheme,
+    #     network=cast(SupportedNetworks, network),
+    #     asset=asset_address,
+    #     pay_to=pay_to_address,
+    #     max_amount_required=max_amount_required,
+    #     resource=resource,
+    #     description=description,
+    #     mime_type=mime_type,
+    #     max_timeout_seconds=max_timeout_seconds,
+    #     output_schema=output_schema,
+    #     extra=eip712_domain,
+    #     **kwargs,
+    # )
+    requirements = [
+        PaymentRequirements(
+            scheme="exact",
+            network="eip155:84532",
+            asset="0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+            amount="1000000",
+            pay_to="0xb870F81337AFEC08308062FEC9667698f324eAf6",
+            max_timeout_seconds=300,
+        )
+    ]
+    return PaymentRequired(
+        x402_version=2,
+        error="Payment required",  # or None if not an error
+        resource=ResourceInfo(
+            url="https://yourapi.com/weather",
+            description="Weather data",
+            mime_type="application/json"
+        ),
+        accepts=requirements,
+        extensions=None  # Optional extensions
     )

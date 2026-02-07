@@ -14,21 +14,14 @@
 """x402_a2a - x402 Payment Protocol Extension for A2A."""
 
 # Core x402 Protocol Types (from x402.types)
-from x402.types import (
+from x402.schemas import (
     PaymentRequirements,
-    x402PaymentRequiredResponse,
     PaymentPayload,
     SettleResponse,
-    ExactPaymentPayload,
-    EIP3009Authorization,
-    TokenAmount,
-    TokenAsset,
-    EIP712Domain,
-    SupportedNetworks,
     VerifyResponse,
 )
 
-from x402.facilitator import FacilitatorConfig, FacilitatorClient
+from x402.http import FacilitatorConfig, HTTPFacilitatorClient
 
 # A2A Extension Types & Functions
 from .types import (

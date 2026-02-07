@@ -14,7 +14,7 @@
 """Protocol error types and error code mapping."""
 
 from typing import List, Union, Optional
-from x402.types import PaymentRequirements, TokenAmount
+from x402 import PaymentRequirements, AssetAmount
 
 
 class x402Error(Exception):
@@ -109,7 +109,7 @@ class x402PaymentRequiredException(x402Error):
     @classmethod
     def for_service(
         cls,
-        price: Union[str, int, TokenAmount],
+        price: Union[str, int, AssetAmount],
         pay_to_address: str,
         resource: str,
         network: str = "base",
@@ -121,7 +121,7 @@ class x402PaymentRequiredException(x402Error):
         Helper method for common use case of single payment requirement.
 
         Args:
-            price: Payment amount (e.g., "$1.00", 1.00, TokenAmount)
+            price: Payment amount (e.g., "$1.00", 1.00, AssetAmount)
             pay_to_address: Ethereum address to receive payment
             resource: Resource identifier (e.g., "/api/generate")
             network: Blockchain network (default: "base")

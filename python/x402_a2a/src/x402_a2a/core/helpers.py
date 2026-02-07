@@ -16,12 +16,12 @@
 from typing import Union, Optional, List, Callable, Any
 from functools import wraps
 
-from ..types import x402PaymentRequiredException, PaymentRequirements, TokenAmount
+from ..types import x402PaymentRequiredException, PaymentRequirements, AssetAmount
 from .merchant import create_payment_requirements
 
 
 def require_payment(
-    price: Union[str, int, TokenAmount],
+    price: Union[str, int, AssetAmount],
     pay_to_address: str,
     resource: Optional[str] = None,
     network: str = "base",
@@ -95,7 +95,7 @@ def require_payment_choice(
 
 
 def paid_service(
-    price: Union[str, int, TokenAmount],
+    price: Union[str, int, AssetAmount],
     pay_to_address: str,
     resource: Optional[str] = None,
     network: str = "base",
@@ -104,7 +104,7 @@ def paid_service(
     """Decorator to automatically require payment for a function or method.
 
     Args:
-        price: Payment amount (e.g., "$1.00", 1.00, TokenAmount)
+        price: Payment amount (e.g., "$1.00", 1.00, AssetAmount)
         pay_to_address: Ethereum address to receive payment
         resource: Resource identifier (auto-generated from function name if None)
         network: Blockchain network (default: "base")
@@ -145,7 +145,7 @@ def paid_service(
 
 
 def create_tiered_payment_options(
-    base_price: Union[str, int, TokenAmount],
+    base_price: Union[str, int, AssetAmount],
     pay_to_address: str,
     resource: str,
     tiers: Optional[List[dict]] = None,
@@ -191,7 +191,7 @@ def create_tiered_payment_options(
         description = tier.get("description", f"Service tier {suffix}")
 
         # Calculate tier price
-        tier_price: Union[str, int, float, TokenAmount]
+        tier_price: Union[str, int, float, AssetAmount]
         if isinstance(base_price, str) and base_price.startswith("$"):
             base_amount = float(base_price[1:])
             tier_price = f"${base_amount * multiplier:.2f}"
@@ -244,7 +244,7 @@ def check_payment_context(context: Any) -> Optional[str]:
 
 
 def smart_paid_service(
-    price: Union[str, int, TokenAmount],
+    price: Union[str, int, AssetAmount],
     pay_to_address: str,
     resource: Optional[str] = None,
     network: str = "base",

@@ -25,6 +25,7 @@ from ..types import (
     RequestContext,
     EventQueue,
     PaymentStatus,
+    PaymentRequired,
     PaymentRequirements,
     SettleResponse,
     x402ExtensionConfig,
@@ -34,7 +35,6 @@ from ..types import (
     Task,
     TaskStatus,
     TaskState,
-    x402PaymentRequiredResponse,
     VerifyResponse,
 )
 
@@ -360,9 +360,26 @@ class x402ServerExecutor(x402BaseExecutor, metaclass=ABCMeta):
         # Store payment requirements for later correlation
         self._payment_requirements_store[task.id] = accepts_array
 
-        payment_required = x402PaymentRequiredResponse(
-            x402_version=1, accepts=accepts_array, error=error_message
-        )
+        for req in accepts_array:
+            payment_required = PaymentRequired(
+                x402_version=req.x402_version,
+                error=req.error or error_message,
+                resource=req.resource,
+                accepts=req.accepts,
+                extensions=req.extensions,
+            )
+
+        # payment_required = PaymentRequired(
+        #     x402_version=2,
+        #     error=error_message,
+        #     resource={
+        #         "url": str("localhost"),
+        #         "description": "Example description",
+        #         "mime_type": "application/json",
+        #     },
+        #     accepts=accepts_array,
+        #     extensions=[None],  # Optional: Add any relevant extensions here
+        # )
 
         # Update task with payment requirements
         task = self.utils.create_payment_required_task(task, payment_required)

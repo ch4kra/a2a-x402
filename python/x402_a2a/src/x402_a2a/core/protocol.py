@@ -20,27 +20,27 @@ from ..types import (
     PaymentRequirements,
     SettleResponse,
     VerifyResponse,
-    FacilitatorClient,
+    HTTPFacilitatorClient,
 )
 
 
 async def verify_payment(
     payment_payload: PaymentPayload,
     payment_requirements: PaymentRequirements,
-    facilitator_client: Optional[FacilitatorClient] = None,
+    facilitator_client: Optional[HTTPFacilitatorClient] = None,
 ) -> VerifyResponse:
     """Verify payment signature and requirements using facilitator.
 
     Args:
         payment_payload: Signed payment authorization
         payment_requirements: Payment requirements to verify against
-        facilitator_client: Optional FacilitatorClient instance
+        facilitator_client: Optional HTTPFacilitatorClient instance
 
     Returns:
         VerifyResponse with is_valid status and invalid_reason if applicable
     """
     if facilitator_client is None:
-        facilitator_client = FacilitatorClient()
+        facilitator_client = HTTPFacilitatorClient()
 
     return await facilitator_client.verify(payment_payload, payment_requirements)
 
@@ -48,20 +48,20 @@ async def verify_payment(
 async def settle_payment(
     payment_payload: PaymentPayload,
     payment_requirements: PaymentRequirements,
-    facilitator_client: Optional[FacilitatorClient] = None,
+    facilitator_client: Optional[HTTPFacilitatorClient] = None,
 ) -> SettleResponse:
     """Settle payment on blockchain using facilitator.
 
     Args:
         payment_payload: Signed payment authorization
         payment_requirements: Payment requirements for settlement
-        facilitator_client: Optional FacilitatorClient instance
+        facilitator_client: Optional HTTPFacilitatorClient instance
 
     Returns:
         SettleResponse with settlement result and transaction hash
     """
     if facilitator_client is None:
-        facilitator_client = FacilitatorClient()
+        facilitator_client = HTTPFacilitatorClient()
 
     # Call facilitator to settle payment
     settle_response = await facilitator_client.settle(
