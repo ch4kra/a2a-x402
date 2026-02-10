@@ -44,6 +44,8 @@ from .types import (
     get_extension_declaration,
     check_extension_activation,
     add_extension_activation_header,
+    Price,
+    AssetAmount,
 )
 
 # Core Functions
@@ -104,4 +106,6 @@ __all__ = [
     "map_error_to_code",
     "x402BaseExecutor",
     "x402ServerExecutor",
+    "Price",
+    "AssetAmount"
 ]

@@ -14,15 +14,14 @@
 """Payment requirements creation functions."""
 
 from typing import Optional, Any
-from x402 import Price
-from x402.schemas import PaymentRequired, ResourceInfo, PaymentRequirements
+from x402.schemas import PaymentRequired, ResourceInfo, PaymentRequirements, Price
 
 
 def create_payment_requirements(
     price: Price,
     pay_to_address: str,
     resource: str,
-    network: str = "base",
+    network: str = "eip155:84532",
     description: str = "",
     mime_type: str = "application/json",
     scheme: str = "exact",
@@ -38,7 +37,7 @@ def create_payment_requirements(
             - TokenAmount: Custom token amount with asset information
         pay_to_address: Ethereum address to receive the payment
         resource: Resource identifier (e.g., "/generate-image")
-        network: Blockchain network (default: "base")
+        network: Blockchain network (default: "eip155:84532")
         description: Human-readable description
         mime_type: Expected response content type
         scheme: Payment scheme (default: "exact")
@@ -53,38 +52,24 @@ def create_payment_requirements(
     # max_amount_required, asset_address, eip712_domain = process_price_to_atomic_amount(
     #     price, network
     # )
-
-    # return PaymentRequirements(
-    #     scheme=scheme,
-    #     network=cast(SupportedNetworks, network),
-    #     asset=asset_address,
-    #     pay_to=pay_to_address,
-    #     max_amount_required=max_amount_required,
-    #     resource=resource,
-    #     description=description,
-    #     mime_type=mime_type,
-    #     max_timeout_seconds=max_timeout_seconds,
-    #     output_schema=output_schema,
-    #     extra=eip712_domain,
-    #     **kwargs,
-    # )
     requirements = [
         PaymentRequirements(
-            scheme="exact",
-            network="eip155:84532",
-            asset="0x036CbD53842c5426634e7929541eC2318f3dCF7e",
-            amount="1000000",
-            pay_to="0xb870F81337AFEC08308062FEC9667698f324eAf6",
-            max_timeout_seconds=300,
+            scheme=scheme,
+            network=network,
+            asset=price.asset, # TODO: get asset address from price data
+            amount=price.amount, # TODO: extract atomic amount from price data
+            pay_to=pay_to_address,
+            max_timeout_seconds=max_timeout_seconds,
+            **kwargs
         )
     ]
     return PaymentRequired(
         x402_version=2,
         error="Payment required",  # or None if not an error
         resource=ResourceInfo(
-            url="https://yourapi.com/weather",
-            description="Weather data",
-            mime_type="application/json"
+            url="https://mathcody.com/premium_request",
+            description=description,
+            mime_type=mime_type
         ),
         accepts=requirements,
         extensions=None  # Optional extensions

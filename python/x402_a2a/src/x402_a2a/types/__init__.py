@@ -31,7 +31,8 @@ from x402.schemas import (
     PaymentPayload,
     VerifyResponse,
     SettleResponse,
-    AssetAmount
+    AssetAmount,
+    Price
 )
 from x402.http import FacilitatorConfig, HTTPFacilitatorClient
 from x402.mechanisms.evm import ExactEIP3009Authorization
@@ -65,6 +66,7 @@ __all__ = [
     "TaskState",
     "TaskStatus",
     "AssetAmount",
+    "Price",
     "AgentExecutor",
     "RequestContext",
     "EventQueue",
