@@ -283,10 +283,10 @@ class x402ServerExecutor(x402BaseExecutor, metaclass=ABCMeta):
         Finds a matching payment requirement from the stored list.
         Developers can override this method to implement custom matching logic.
         """
-        logger.info("Searching for matching payment requirement...")
+        logger.info("Searching for matching payment requirement ------>>>")
         for requirement in accepts_array:
-            scheme_match = requirement.scheme == payment_payload.scheme
-            network_match = requirement.network == payment_payload.network
+            scheme_match = requirement.scheme == payment_payload.accepted.scheme
+            network_match = requirement.network == payment_payload.accepted.network
 
             if scheme_match and network_match:
                 logger.info("  => Found a matching payment requirement.")
@@ -303,7 +303,8 @@ class x402ServerExecutor(x402BaseExecutor, metaclass=ABCMeta):
         """
         Extracts the matching payment requirements based on the payment payload.
         """
-        accepts_array = self._payment_requirements_store.get(task.id)
+        payment_required_array = self._payment_requirements_store.get(task.id)
+        accepts_array = payment_required_array[0].accepts if payment_required_array else None
         if not accepts_array:
             logger.warning(
                 f"No payment requirements found in store for task ID: {task.id}"
@@ -368,18 +369,6 @@ class x402ServerExecutor(x402BaseExecutor, metaclass=ABCMeta):
                 accepts=req.accepts,
                 extensions=req.extensions,
             )
-
-        # payment_required = PaymentRequired(
-        #     x402_version=2,
-        #     error=error_message,
-        #     resource={
-        #         "url": str("localhost"),
-        #         "description": "Example description",
-        #         "mime_type": "application/json",
-        #     },
-        #     accepts=accepts_array,
-        #     extensions=[None],  # Optional: Add any relevant extensions here
-        # )
 
         # Update task with payment requirements
         task = self.utils.create_payment_required_task(task, payment_required)

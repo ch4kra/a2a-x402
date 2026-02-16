@@ -45,7 +45,7 @@ from .types import (
     check_extension_activation,
     add_extension_activation_header,
     Price,
-    AssetAmount,
+    AssetAmount
 )
 
 # Core Functions
@@ -87,6 +87,10 @@ __all__ = [
     "x402Metadata",
     "x402ExtensionConfig",
     "x402PaymentRequiredException",
+    "PaymentRequirements",
+    "PaymentPayload",
+    "SettleResponse",
+    "VerifyResponse",
     "require_payment",
     "require_payment_choice",
     "paid_service",

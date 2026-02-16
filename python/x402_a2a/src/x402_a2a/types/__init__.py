@@ -28,11 +28,11 @@ from a2a.server.events.event_queue import EventQueue
 from x402.schemas import (
     PaymentRequired,
     PaymentRequirements,
-    PaymentPayload,
     VerifyResponse,
     SettleResponse,
     AssetAmount,
-    Price
+    Price,
+    PaymentPayload,
 )
 from x402.http import FacilitatorConfig, HTTPFacilitatorClient
 from x402.mechanisms.evm import ExactEIP3009Authorization
@@ -71,8 +71,9 @@ __all__ = [
     "RequestContext",
     "EventQueue",
     "PaymentRequired",
-    "PaymentRequirements",
     "PaymentPayload",
+    "PaymentRequirements",
+    "ExactEIP3009Authorization",
     "VerifyResponse",
     "SettleResponse",
     "FacilitatorConfig",
@@ -90,7 +91,6 @@ __all__ = [
     "X402_EXTENSION_URI",
     "x402ExtensionConfig",
     "x402ServerConfig",
-    "ExactEIP3009Authorization",
     "get_extension_declaration",
     "check_extension_activation",
     "add_extension_activation_header",
